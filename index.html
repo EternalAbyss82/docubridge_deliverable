@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuBridge Strategic Roadmap</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 25px;
+            border-left: 4px solid;
+        }
+        
+        .content-launch { border-left-color: #e74c3c; }
+        .link-building { border-left-color: #3498db; }
+        .tech-improvement { border-left-color: #2ecc71; }
+        
+        .gantt-container {
+            overflow-x: auto;
+            margin-bottom: 40px;
+        }
+        
+        .gantt-chart {
+            min-width: 1200px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .gantt-header {
+            display: grid;
+            grid-template-columns: 300px repeat(24, 1fr);
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .gantt-header > div {
+            padding: 15px 8px;
+            text-align: center;
+            border-right: 1px solid #dee2e6;
+        }
+        
+        .gantt-header .task-header {
+            text-align: left;
+            padding-left: 20px;
+            background: #e9ecef;
+        }
+        
+        .gantt-row {
+            display: grid;
+            grid-template-columns: 300px repeat(24, 1fr);
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.2s;
+        }
+        
+        .gantt-row:hover {
+            background: #f8f9fa;
+        }
+        
+        .task-name {
+            padding: 20px;
+            border-right: 2px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .task-owner {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-bottom: 3px;
+        }
+        
+        .task-goal {
+            font-size: 0.8em;
+            color: #27ae60;
+            font-style: italic;
+        }
+        
+        .gantt-cell {
+            border-right: 1px solid #f1f3f4;
+            position: relative;
+            min-height: 80px;
+        }
+        
+        .task-bar {
+            height: 24px;
+            border-radius: 12px;
+            margin: 28px 4px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+        
+        .content-launch .task-bar { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .link-building .task-bar { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .tech-improvement .task-bar { background: linear-gradient(45deg, #2ecc71, #27ae60); }
+        
+        .milestone {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            background: #f39c12;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .milestone::after {
+            content: '★';
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 10px;
+        }
+        
+        .quarter-separator {
+            border-right: 3px solid #6c5ce7 !important;
+            background: linear-gradient(to bottom, transparent 0%, rgba(108, 92, 231, 0.1) 50%, transparent 100%);
+        }
+        
+        .kpi-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .kpi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-left: 4px solid #6c5ce7;
+        }
+        
+        .kpi-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .kpi-list {
+            list-style: none;
+        }
+        
+        .kpi-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f4;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .kpi-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .kpi-target {
+            background: #e8f5e8;
+            color: #2ecc71;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>DocuBridge Strategic Roadmap</h1>
+            <p>Q1-Q2 2025 Content, Link-Building & Technical Enhancement Plan</p>
+        </div>
+        
+        <div class="content">
+            <div class="legend">
+                <div class="legend-item content-launch">
+                    <div style="width: 20px; height: 20px; background: linear-gradient(45deg, #e74c3c, #c0392b); border-radius: 50%;"></div>
+                    <span>Content Launches</span>
+                </div>
+                <div class="legend-item link-building">
+                    <div style="width: 20px; height: 20px; background: linear-gradient(45deg, #3498db, #2980b9); border-radius: 50%;"></div>
+                    <span>Link-Building</span>
+                </div>
+                <div class="legend-item tech-improvement">
+                    <div style="width: 20px; height: 20px; background: linear-gradient(45deg, #2ecc71, #27ae60); border-radius: 50%;"></div>
+                    <span>Tech Improvements</span>
+                </div>
+            </div>
+            
+            <div class="gantt-container">
+                <div class="gantt-chart">
+                    <div class="gantt-header">
+                        <div class="task-header">Task / Owner / Goal</div>
+                        <div>Jan W1</div><div>Jan W2</div><div>Jan W3</div><div>Jan W4</div>
+                        <div>Feb W1</div><div>Feb W2</div><div>Feb W3</div><div>Feb W4</div>
+                        <div>Mar W1</div><div>Mar W2</div><div>Mar W3</div><div class="quarter-separator">Mar W4</div>
+                        <div>Apr W1</div><div>Apr W2</div><div>Apr W3</div><div>Apr W4</div>
+                        <div>May W1</div><div>May W2</div><div>May W3</div><div>May W4</div>
+                        <div>Jun W1</div><div>Jun W2</div><div>Jun W3</div><div>Jun W4</div>
+                    </div>
+                    
+                    <!-- Content Launch Initiatives -->
+                    <div class="gantt-row content-launch">
+                        <div class="task-name">
+                            <div class="task-title">Document Security Best Practices Guide</div>
+                            <div class="task-owner">Owner: Content Team Lead</div>
+                            <div class="task-goal">Goal: 10K organic visits, 50 backlinks</div>
+                        </div>
+                        <div class="gantt-cell"></div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Research</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Writing</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Launch</div>
+                            <div class="milestone"></div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                    </div>
+                    
+                    <div class="gantt-row content-launch">
+                        <div class="task-name">
+                            <div class="task-title">AI Document Processing Video Series</div>
+                            <div class="task-owner">Owner: Video Content Creator</div>
+                            <div class="task-goal">Goal: 25K YouTube views, 100 demo requests</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Script</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Produce</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Edit</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Launch</div>
+                            <div class="milestone"></div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                    </div>
+                    
+                    <div class="gantt-row content-launch">
+                        <div class="task-name">
+                            <div class="task-title">Enterprise Workflow Templates</div>
+                            <div class="task-owner">Owner: Product Marketing</div>
+                            <div class="task-goal">Goal: 500 template downloads, 30% conversion</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Design</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Build</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Test</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Launch</div>
+                            <div class="milestone"></div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                    </div>
+                    
+                    <!-- Link-Building Initiatives -->
+                    <div class="gantt-row link-building">
+                        <div class="task-name">
+                            <div class="task-title">Industry Expert Outreach Program</div>
+                            <div class="task-owner">Owner: SEO Specialist</div>
+                            <div class="task-goal">Goal: 25 high-authority backlinks (DR 60+)</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Prospect</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Outreach</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Follow-up</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Secure</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Maintain</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Expand</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Scale</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Optimize</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Report</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Refine</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Execute</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Measure</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Phase 2</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Scale</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Expand</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Optimize</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Maintain</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Audit</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Report</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Plan Q3</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Review</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Strategy</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Launch</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Execute</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gantt-row link-building">
+                        <div class="task-name">
+                            <div class="task-title">Guest Posting Campaign</div>
+                            <div class="task-owner">Owner: Content Marketing Manager</div>
+                            <div class="task-goal">Goal: 15 guest posts, 40K referral traffic</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Research</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Pitch</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Write</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Publish</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Promote</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Scale</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Expand</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Optimize</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Measure</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Phase 2</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Execute</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Scale</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Expand</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Report</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Analyze</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Optimize</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Scale</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Final</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Review</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Report</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Plan</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Strategy</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gantt-row link-building">
+                        <div class="task-name">
+                            <div class="task-title">Strategic Partnership Links</div>
+                            <div class="task-owner">Owner: Business Development</div>
+                            <div class="task-goal">Goal: 10 partner integrations, mutual links</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Identify</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Negotiate</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Execute</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Launch</div>
+                            <div class="milestone"></div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Monitor</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Expand</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Phase 2</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Scale</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Optimize</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Measure</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Report</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Analyze</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Plan Q3</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Review</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Strategy</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Execute</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Launch</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Monitor</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tech Improvement Initiatives -->
+                    <div class="gantt-row tech-improvement">
+                        <div class="task-name">
+                            <div class="task-title">Core Web Vitals Optimization</div>
+                            <div class="task-owner">Owner: Frontend Developer</div>
+                            <div class="task-goal">Goal: <90 LCP, <100ms FID, <0.1 CLS</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Audit</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Plan</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Optimize</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Test</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Deploy</div>
+                            <div class="milestone"></div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Monitor</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                    </div>
+                    
+                    <div class="gantt-row tech-improvement">
+                        <div class="task-name">
+                            <div class="task-title">Advanced Search Implementation</div>
+                            <div class="task-owner">Owner: Backend Developer</div>
+                            <div class="task-goal">Goal: 50% faster search, semantic results</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Research</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Design</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Build</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Test</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Deploy</div>
+                            <div class="milestone"></div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Monitor</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                    </div>
+                    
+                    <div class="gantt-row tech-improvement">
+                        <div class="task-name">
+                            <div class="task-title">Mobile App Performance Upgrade</div>
+                            <div class="task-owner">Owner: Mobile Developer</div>
+                            <div class="task-goal">Goal: 40% faster load times, 4.8★ rating</div>
+                        </div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Analyze</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Optimize</div>
+                        </div>
+                        <div class="gantt-cell">
+                            <div class="task-bar">Test</div
